@@ -35,10 +35,22 @@ namespace Stripe
                 SetupRequestOptions(requestOptions))
             );
         }
+        
+        
 
         public virtual StripeCard Get(string customerOrRecipientId, string cardId, bool isRecipient = false, StripeRequestOptions requestOptions = null)
         {
             var url = SetupUrl(customerOrRecipientId, isRecipient, cardId);
+
+            return Mapper<StripeCard>.MapFromJson(
+                Requestor.GetString(this.ApplyAllParameters(null, url, false),
+                SetupRequestOptions(requestOptions))
+            );
+        }
+        
+            public virtual StripeCard Get(string cardId,  StripeRequestOptions requestOptions = null)
+        {
+            var url = SetupUrl(cardId);
 
             return Mapper<StripeCard>.MapFromJson(
                 Requestor.GetString(this.ApplyAllParameters(null, url, false),
@@ -110,7 +122,16 @@ namespace Stripe
                 cancellationToken)
             );
         }
+      public virtual async Task<StripeCard> GetAsync( string cardId,  StripeRequestOptions requestOptions = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var url = SetupUrl(cardId);
 
+            return Mapper<StripeCard>.MapFromJson(
+                await Requestor.GetStringAsync(this.ApplyAllParameters(null, url, false),
+                SetupRequestOptions(requestOptions),
+                cancellationToken)
+            );
+        }
         public virtual async Task<StripeCard> UpdateAsync(string customerOrRecipientId, string cardId, StripeCardUpdateOptions updateOptions, bool isRecipient = false, StripeRequestOptions requestOptions = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var url = SetupUrl(customerOrRecipientId, isRecipient, cardId);
